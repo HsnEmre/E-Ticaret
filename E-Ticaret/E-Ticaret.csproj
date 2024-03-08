@@ -136,6 +136,7 @@
     <Content Include="DB\ETicaretModel.edmx.diagram">
       <DependentUpon>ETicaretModel.edmx</DependentUpon>
     </Content>
+    <Content Include="App_Code\_MenuHelper.cshtml" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -156,6 +157,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\i\Index.cshtml" />
     <Content Include="Views\Shared\ProductItem.cshtml" />
+    <Content Include="Views\Shared\_MenuTopCategory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />

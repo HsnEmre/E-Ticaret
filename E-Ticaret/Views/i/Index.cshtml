@@ -2,11 +2,11 @@
 @{
     ViewBag.Title = "Index";
     List<E_Ticaret.DB.Categories> categories = new List<E_Ticaret.DB.Categories>();
-    if (Model.Category!=null)
+    if (Model.Category != null)
     {
         categories.Add(Model.Category);
         var parentcaCat = Model.Category.Categories2;
-        while (parentcaCat!=null)
+        while (parentcaCat != null)
         {
             categories.Add(Model.Category);
             parentcaCat = parentcaCat.Categories2;
@@ -18,12 +18,21 @@
 <div class="row">
     <div class="col-md-12">
         <ol class="breadcrumb">
-            <li><a href="@Url.Action("index","i")">Ana Sayfa</a></li>
-            @foreach (var cat in categories)
+            <li><a href="@Url.Action("index", "i", new {id=0})">Ana Sayfa</a></li>
+
+            @for (int i = categories.Count - 1; i >= 0; i--)
             {
-                <li><a href="@Url.Action("index","i",new {id=cat.Id})">@cat.Name</a></li>
-                @*<li class="active">Bilgisayar</li>*@
+                if (i == 0)
+                {
+                    <li class="@(i==0?"active":"")">@categories[i].Name</li>
+                }
+                else
+                {
+                    <li class="@(i==0?"active":"")"><a href="@Url.Action("index","i",new { id = categories[i].Id})">@categories[i].Name</a></li>
+                }
+
             }
+
 
 
         </ol>

@@ -27,13 +27,9 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="menulist">
-                <ul class="nav navbar-nav">
-                    @*
-                            TODO:Kategoriler gelecek
-                            <li><a href="#">Link 1</a></li>
-                        <li><a href="#">Link 2</a></li>
-                        <li><a href="#">Link 3</a></li>*@
-                </ul>
+            @Html.Partial("_MenuTopCategory",(List<E_Ticaret.DB.Categories>)ViewBag.MenuCategories)
+
+               
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="#">

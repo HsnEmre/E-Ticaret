@@ -14,13 +14,14 @@ namespace E_Ticaret.Controllers
         public iController()
         {
             context = new EticaretEntities();
+            ViewBag.MenuCategories = context.Categories.Where(x=>x.Parent_Id==null).ToList();
         }
-        public ActionResult Index(int? id)
+        public ActionResult Index(int id=0)
         {
             //context.Members.ToList();
             IQueryable<DB.Products> products = context.Products;
             DB.Categories category = null;
-            if (id.HasValue)
+            if (id>0)
             {
                 products = products.Where(x => x.Category_Id == id);
                 category = context.Categories.FirstOrDefault(x => x.Id == id);

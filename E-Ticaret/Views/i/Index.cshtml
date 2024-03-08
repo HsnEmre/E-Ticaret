@@ -1,0 +1,43 @@
+﻿@model E_Ticaret.Models.i.indexModel
+@{
+    ViewBag.Title = "Index";
+    List<E_Ticaret.DB.Categories> categories = new List<E_Ticaret.DB.Categories>();
+    if (Model.Category!=null)
+    {
+        categories.Add(Model.Category);
+        var parentcaCat = Model.Category.Categories2;
+        while (parentcaCat!=null)
+        {
+            categories.Add(Model.Category);
+            parentcaCat = parentcaCat.Categories2;
+        }
+
+    }
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index","i")">Ana Sayfa</a></li>
+            @foreach (var cat in categories)
+            {
+                <li><a href="@Url.Action("index","i",new {id=cat.Id})">@cat.Name</a></li>
+                @*<li class="active">Bilgisayar</li>*@
+            }
+
+
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+
+    @foreach (var item in Model.Products)
+    {
+        @Html.Partial("ProductItem", item);
+    }
+
+
+
+</div>
+

@@ -50,6 +50,8 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -100,6 +102,17 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="DB\ETicaretModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ETicaretModel.edmx</DependentUpon>
+      <LastGenOutput>ETicaretModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DB\ETicaretModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ETicaretModel.edmx</DependentUpon>
+      <LastGenOutput>ETicaretModel.cs</LastGenOutput>
+    </Content>
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -116,6 +129,13 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
+    <EntityDeploy Include="DB\ETicaretModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ETicaretModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="DB\ETicaretModel.edmx.diagram">
+      <DependentUpon>ETicaretModel.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -132,12 +152,67 @@
     <Content Include="Template\Register.html" />
     <Content Include="Template\template.html" />
     <Content Include="Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\i\Index.cshtml" />
+    <Content Include="Views\Shared\ProductItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\iController.cs" />
+    <Compile Include="DB\Addresses.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Categories.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Comments.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\ETicaretModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ETicaretModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\ETicaretModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\ETicaretModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ETicaretModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Members.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Membertypes.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\MessageReplies.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Messages.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\OrderDetails.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Orders.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Products.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\sysdiagrams.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Enums.cs" />
+    <Compile Include="Models\i\indexModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -154,8 +229,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

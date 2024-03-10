@@ -7,15 +7,10 @@ using System.Web.Mvc;
 
 namespace E_Ticaret.Controllers
 {
-    public class iController : Controller
+    public class iController : BaseController
     {
         // GET: i
-        EticaretEntities context;
-        public iController()
-        {
-            context = new EticaretEntities();
-            ViewBag.MenuCategories = context.Categories.Where(x=>x.Parent_Id==null).ToList();
-        }
+      
         public ActionResult Index(int id=0)
         {
             //context.Members.ToList();

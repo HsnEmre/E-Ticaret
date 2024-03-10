@@ -21,7 +21,7 @@ namespace E_Ticaret.Controllers
         {
             try
             {
-                if (user.rePassword !=user.Member.Password)
+                if (user.rePassword != user.Member.Password)
                 {
                     throw new Exception("Şifreler aynı değildir!");
                 }
@@ -30,18 +30,44 @@ namespace E_Ticaret.Controllers
                 user.Member.AddedDate = DateTime.Now;
                 context.Members.Add(user.Member);
                 context.SaveChanges();
-                return RedirectToAction("Login","Account");
+                return RedirectToAction("Login", "Account");
             }
             catch (Exception ex)
             {
                 ViewBag.ReError = ex.Message;
                 return View();
             }
-           
+
         }
+        [HttpGet]
         public ActionResult Login()
         {
             return View();
+        }
+        [HttpPost]
+        public ActionResult Login(Models.Account.LoginModels model)
+        {
+
+            try
+            {
+
+                var user = context.Members.FirstOrDefault(x => x.Password == model.Member.Password && x.Email == model.Member.Email);
+                if (user != null)
+                {
+                    Session["LogonUser"] = user;
+                    return RedirectToAction("index", "i");
+                }
+                else
+                {
+                    ViewBag.ReError = "Kullanıcı Bilgileriniz yanlış";
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
         }
         public ActionResult LogOut()
         {

@@ -42,6 +42,10 @@ textarea {
 }
 
 /*Menü CSS*/
+.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+
 
 .dropdown-submenu {
     position: relative;

@@ -71,7 +71,8 @@ namespace E_Ticaret.Controllers
         }
         public ActionResult LogOut()
         {
-            return View();
+            Session["LogonUser"] = null;
+            return RedirectToAction("Login", "Account");
         }
         public ActionResult Profil()
         {

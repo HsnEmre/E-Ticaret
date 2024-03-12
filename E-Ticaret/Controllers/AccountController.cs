@@ -25,6 +25,10 @@ namespace E_Ticaret.Controllers
                 {
                     throw new Exception("Şifreler aynı değildir!");
                 }
+                if (context.Members.Any(x => x.Email == user.Member.Email))
+                {
+                    throw new Exception("Bu e-mail adresi zaten kayıtlıdır!");
+                }
 
                 user.Member.MemberType = DB.Membertypes.Customer;
                 user.Member.AddedDate = DateTime.Now;

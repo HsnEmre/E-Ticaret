@@ -1,0 +1,11 @@
+﻿@model E_Ticaret.Models.i.ProductModels
+
+@{
+    ViewBag.Title = "Product";
+}
+
+<h2>Product</h2>
+
+@Html.Partial("_Product", Model.Product)
+@Html.Partial("_AddCart", Model.Product)
+@Html.Partial("_Comments", Model.Comments)

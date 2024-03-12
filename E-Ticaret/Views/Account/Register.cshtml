@@ -29,27 +29,28 @@
                         </center>
                     </div>
                     <div class="form-group">
-                        @Html.TextBoxFor(Model => Model.Member.Name, new { @class = "form-control", placeholder = "Name", type = "text" })
+                        
+                        @Html.TextBoxFor(Model => Model.Member.Name, new { @class = "form-control", placeholder = "Name", type = "text",required="required" })
 
                     </div>
 
                     <div class="form-group">
-                        @Html.TextBoxFor(Model => Model.Member.Surname, new { @class = "form-control", placeholder = "surname", type = "text" })
+                        @Html.TextBoxFor(Model => Model.Member.Surname, new { @class = "form-control", placeholder = "surname", type = "text", required = "required" })
 
                     </div>
 
                     <div class="form-group">
-                        @Html.TextBoxFor(Model => Model.Member.Email, new { @class = "form-control", placeholder = "e-mail address", type = "email" })
+                        @Html.TextBoxFor(Model => Model.Member.Email, new { @class = "form-control", placeholder = "e-mail address", type = "email", required = "required" })
 
                     </div>
 
                     <div class="form-group">
-                        @Html.TextBoxFor(Model => Model.Member.Password, new { @class = "form-control", placeholder = "password", type = "password" })
+                        @Html.TextBoxFor(Model => Model.Member.Password, new { @class = "form-control", placeholder = "password", type = "password", required = "required" })
 
                     </div>
 
                     <div class="form-group">
-                        @Html.TextBoxFor(Model => Model.rePassword, new { @class = "form-control", placeholder = "re-password", type = "password" })
+                        @Html.TextBoxFor(Model => Model.rePassword, new { @class = "form-control", placeholder = "re-password", type = "password", required = "required" })
 
                     </div>
 

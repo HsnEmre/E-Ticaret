@@ -1,4 +1,5 @@
 ﻿using E_Ticaret.DB;
+using E_Ticaret.Models.i;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,8 @@ namespace E_Ticaret.Controllers
     public class iController : BaseController
     {
         // GET: i
-      
+
+        [HttpGet]
         public ActionResult Index(int id=0)
         {
             //context.Members.ToList();
@@ -29,6 +31,21 @@ namespace E_Ticaret.Controllers
                 
             };
             return View(viewsModel);
+        }
+        [HttpGet]
+        public ActionResult Product(int id=0)
+        {
+            var pro=context.Products.FirstOrDefault(x => x.Id == id);
+            if (pro == null)
+            {
+                return RedirectToAction("index", "i");
+            }
+            ProductModels model = new ProductModels()
+            {
+                Product = pro,
+                Comments=pro.Comments.ToList()
+            };
+            return View(model);
         }
     }
 }

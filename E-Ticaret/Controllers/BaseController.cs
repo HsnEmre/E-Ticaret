@@ -14,7 +14,17 @@ namespace E_Ticaret.Controllers
         {
             context = new EticaretEntities();
             ViewBag.MenuCategories = context.Categories.Where(x => x.Parent_Id == null).ToList();
-           
+
+        }
+
+        protected DB.Members CurrentUser()
+        {
+            return (DB.Members)Session["LogonUser"];
+        }
+
+        protected int GetCurrentUserId()
+        {
+            return ((DB.Members)Session["LogonUser"]).Id;
         }
 
     }

@@ -218,6 +218,7 @@
     <Compile Include="Models\Account\LoginModels.cs" />
     <Compile Include="Models\Account\RegisterModels.cs" />
     <Compile Include="Models\Enums.cs" />
+    <Compile Include="Models\i\CommentModels.cs" />
     <Compile Include="Models\i\indexModel.cs" />
     <Compile Include="Models\i\ProductModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -8,4 +8,5 @@
 
 @Html.Partial("_Product", Model.Product)
 @Html.Partial("_AddCart", Model.Product)
-@Html.Partial("_Comments", Model.Comments)
+@Html.Partial("_Comments", new E_Ticaret.Models.i.CommentModels() { 
+    Comments=Model.Comments,Product=Model.Product})

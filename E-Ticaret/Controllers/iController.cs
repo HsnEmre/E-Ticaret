@@ -13,12 +13,12 @@ namespace E_Ticaret.Controllers
         // GET: i
 
         [HttpGet]
-        public ActionResult Index(int id=0)
+        public ActionResult Index(int id = 0)
         {
             //context.Members.ToList();
             IQueryable<DB.Products> products = context.Products;
             DB.Categories category = null;
-            if (id>0)
+            if (id > 0)
             {
                 products = products.Where(x => x.Category_Id == id);
                 category = context.Categories.FirstOrDefault(x => x.Id == id);
@@ -27,15 +27,15 @@ namespace E_Ticaret.Controllers
             var viewsModel = new Models.i.indexModel()
             {
                 Products = products.ToList(),
-                Category=category
-                
+                Category = category
+
             };
             return View(viewsModel);
         }
         [HttpGet]
-        public ActionResult Product(int id=0)
+        public ActionResult Product(int id = 0)
         {
-            var pro=context.Products.FirstOrDefault(x => x.Id == id);
+            var pro = context.Products.FirstOrDefault(x => x.Id == id);
             if (pro == null)
             {
                 return RedirectToAction("index", "i");
@@ -43,9 +43,27 @@ namespace E_Ticaret.Controllers
             ProductModels model = new ProductModels()
             {
                 Product = pro,
-                Comments=pro.Comments.ToList()
+                Comments = pro.Comments.ToList()
             };
             return View(model);
+        }
+        [HttpPost]
+        public ActionResult Product(DB.Comments comment)
+        {
+            try
+            {
+                int i=base.GetCurrentUserId();
+                comment.Member_Id = i;
+                comment.AddedDate = DateTime.Now;
+                context.Comments.Add(comment);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.MyError=ex.Message;
+
+            }
+            return RedirectToAction("Product", "i");
         }
     }
 }

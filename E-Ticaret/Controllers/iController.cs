@@ -2,6 +2,7 @@
 using E_Ticaret.Models.i;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -48,22 +49,48 @@ namespace E_Ticaret.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Product(DB.Comments comment)
+        public ActionResult Product(DB.Comments yorum)
         {
             try
             {
-                int i=base.GetCurrentUserId();
-                comment.Member_Id = i;
-                comment.AddedDate = DateTime.Now;
-                context.Comments.Add(comment);
+                //TODO:Test alanı gereklidir
+                yorum.Member_Id = base.GetCurrentUserId();
+                yorum.AddedDate = DateTime.Now;
+                context.Comments.Add(yorum);
                 context.SaveChanges();
             }
-            catch (Exception ex)
+            catch (DbEntityValidationException ex)
             {
-                ViewBag.MyError=ex.Message;
+                foreach (var validationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        // Hata ayrıntılarını işleyin, örneğin:
+                        ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
+                    }
+                }
 
+                ViewBag.MyError = ex.Message;
             }
             return RedirectToAction("Product", "i");
         }
+        //public ActionResult Product(DB.Comments comment)
+        //{
+        //    try
+        //    {
+        //        comment=new DB.Comments();
+        //        int i=base.GetCurrentUserId();
+        //        comment.Member_Id = i;
+        //        comment.AddedDate = DateTime.Now;
+        //        context.Comments.Add(comment);
+        //        context.SaveChanges();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ViewBag.MyError=ex.Message;
+
+        //    }
+        //    return RedirectToAction("Product", "i");
+        //}
     }
 }

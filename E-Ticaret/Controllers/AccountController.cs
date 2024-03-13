@@ -1,4 +1,5 @@
 ﻿using E_Ticaret.DB;
+using E_Ticaret.Models.Account;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,9 +79,25 @@ namespace E_Ticaret.Controllers
             Session["LogonUser"] = null;
             return RedirectToAction("Login", "Account");
         }
-        public ActionResult Profil()
+        [HttpGet]
+        public ActionResult Profil( int id=0)
         {
-            return View();
+            if (id == 0)
+            {
+                id=base.GetCurrentUserId();
+            }
+
+
+            var user = context.Members.FirstOrDefault(x => x.Id == id);
+            if (user == null)
+            {
+                return RedirectToAction("index", "i");
+            }
+            ProfileModels model = new ProfileModels()
+            {
+                Members = user
+            };
+            return View(model);
         }
     }
 }

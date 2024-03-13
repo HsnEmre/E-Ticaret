@@ -129,6 +129,7 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="İmages\Upload\1657899958876.jpg" />
     <EntityDeploy Include="DB\ETicaretModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>ETicaretModel.Designer.cs</LastGenOutput>
@@ -216,6 +217,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Account\LoginModels.cs" />
+    <Compile Include="Models\Account\ProfileModels.cs" />
     <Compile Include="Models\Account\RegisterModels.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\i\CommentModels.cs" />
@@ -234,6 +236,7 @@
     <Content Include="Views\Shared\_Product.cshtml" />
     <Content Include="Views\Shared\_AddCart.cshtml" />
     <Content Include="Views\Shared\_Comments.cshtml" />
+    <Content Include="Views\Account\Profil.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

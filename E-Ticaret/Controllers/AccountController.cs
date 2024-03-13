@@ -118,13 +118,12 @@ namespace E_Ticaret.Controllers
         {
             try
             {
-                int id=GetCurrentUserId();
+                int id = GetCurrentUserId();
                 var updateMember = context.Members.FirstOrDefault(x => x.Id == id);
                 updateMember.ModifiedDate = DateTime.Now;
                 updateMember.Bio = model.Members.Bio;
                 updateMember.Name = model.Members.Name;
                 updateMember.Surname = model.Members.Surname;
-
 
                 if (string.IsNullOrEmpty(model.Members.Password) == false)
                 {
@@ -133,17 +132,17 @@ namespace E_Ticaret.Controllers
                 if (Request.Files != null && Request.Files.Count > 0)
                 {
                     var file = Request.Files[0];
-                    var folder = Server.MapPath("~/images/upload/");
-                    var filename = Guid.NewGuid() + ".jpg";
+                    if (file.ContentLength > 0)
+                    {
+                        var folder = Server.MapPath("~/İmages/Upload");
+                        var fileName = Guid.NewGuid() + ".jpg";
+                        file.SaveAs(Path.Combine(folder, fileName));
 
-                    file.SaveAs(Path.Combine(folder, filename));
-
-                    var filepath = "images/upload/" + filename;
-                    updateMember.ProfileImageName = filepath;
+                        var filePath = "images/upload/" + fileName;
+                        updateMember.ProfileImageName = filePath;
+                    }
                 }
-
                 context.SaveChanges();
-
 
                 return RedirectToAction("Profil", "Account");
             }
@@ -157,6 +156,47 @@ namespace E_Ticaret.Controllers
                 };
                 return View(viewModel);
             }
+            //try
+            //{
+            //    int id=GetCurrentUserId();
+            //    var updateMember = context.Members.FirstOrDefault(x => x.Id == id);
+            //    updateMember.ModifiedDate = DateTime.Now;
+            //    updateMember.Bio = model.Members.Bio;
+            //    updateMember.Name = model.Members.Name;
+            //    updateMember.Surname = model.Members.Surname;
+
+
+            //    if (string.IsNullOrEmpty(model.Members.Password) == false)
+            //    {
+            //        updateMember.Password = model.Members.Password;
+            //    }
+            //    if (Request.Files != null && Request.Files.Count > 0)
+            //    {
+            //        var file = Request.Files[0];
+            //        var folder = Server.MapPath("~/Images/Upload/");
+            //        var filename = Guid.NewGuid() + ".jpg";
+
+            //        file.SaveAs(Path.Combine(folder, filename));
+
+            //        var filepath = "images/upload/" + filename;
+            //        updateMember.ProfileImageName = filepath;
+            //    }
+
+            //    context.SaveChanges();
+
+
+            //    return RedirectToAction("Profil", "Account");
+            //}
+            //catch (Exception ex)
+            //{
+            //    ViewBag.MyError = ex.Message;
+            //    int id = GetCurrentUserId();
+            //    var viewModel = new Models.Account.ProfileModels()
+            //    {
+            //        Members = context.Members.FirstOrDefault(x => x.Id == id)
+            //    };
+            //    return View(viewModel);
+            //}
         }
 
     }

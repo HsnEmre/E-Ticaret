@@ -6,7 +6,7 @@
 <h2>Profil Düzenleme</h2>
 <h4>@ViewBag.MyError</h4>
 
-@using (Html.BeginForm("ProfilEdit", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("ProfileEdit", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 

@@ -1,4 +1,5 @@
 ﻿using E_Ticaret.DB;
+using E_Ticaret.Models;
 using E_Ticaret.Models.i;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,62 @@ namespace E_Ticaret.Controllers
             }
             return RedirectToAction("Product", "i");
         }
+        [HttpGet]
+        public ActionResult AddBasket(int id)
+        {
+            List<Models.i.BasketModel> basket = null;
+            if (Session["Basket"] == null)
+            {
+                basket = new List<Models.i.BasketModel>();
+            }
+            else
+            {
+                basket = (List<Models.i.BasketModel>)Session["Basket"];
+            }
+
+            if (basket.Any(x => x.Product.Id == id))
+            {
+                var pro = basket.FirstOrDefault(x => x.Product.Id == id);
+                pro.Count += 1;
+            }
+            else
+            {
+                var pro = context.Products.FirstOrDefault(x => x.Id == id);
+                if (pro!=null)
+                {
+                    basket.Add(new Models.i.BasketModel()
+                    {
+                        Count = 1,
+                        Product = pro,
+                    });
+                }
+                
+            }
+            Session["Basket"] = basket;
+
+            return RedirectToAction("Basket", "i");
+        }
+
+        [HttpGet]
+        public ActionResult Basket()
+        {
+            List<Models.i.BasketModel>  model = (List<Models.i.BasketModel>)Session["Basket"];
+            if (model == null)
+            {
+               model=new List<Models.i.BasketModel> ();
+            }
+
+
+           
+            ViewBag.TotalPrice = model.Select(x => x.Product.Price * x.Count).Sum();
+
+
+            return View(model);
+        }
+
+
+
+
         //public ActionResult Product(DB.Comments comment)
         //{
         //    try

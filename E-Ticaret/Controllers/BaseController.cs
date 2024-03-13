@@ -19,11 +19,14 @@ namespace E_Ticaret.Controllers
 
         protected DB.Members CurrentUser()
         {
+            if (Session["LogonUser"] == null) { return null; }
+
             return (DB.Members)Session["LogonUser"];
         }
 
         protected int GetCurrentUserId()
         {
+            if (Session["LogonUser"] == null) return 0;
             return ((DB.Members)Session["LogonUser"]).Id;
         }
 

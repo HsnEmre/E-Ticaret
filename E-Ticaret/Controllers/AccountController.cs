@@ -2,6 +2,7 @@
 using E_Ticaret.Models.Account;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -80,11 +81,11 @@ namespace E_Ticaret.Controllers
             return RedirectToAction("Login", "Account");
         }
         [HttpGet]
-        public ActionResult Profil( int id=0)
+        public ActionResult Profil(int id = 0)
         {
             if (id == 0)
             {
-                id=base.GetCurrentUserId();
+                id = base.GetCurrentUserId();
             }
 
 
@@ -99,5 +100,64 @@ namespace E_Ticaret.Controllers
             };
             return View(model);
         }
+        [HttpGet]
+        public ActionResult ProfileEdit()
+        {
+            int id = base.GetCurrentUserId();
+
+            var user = context.Members.FirstOrDefault(x => x.Id == id);
+            if (user == null) return RedirectToAction("index", "i");
+            ProfileModels model = new ProfileModels()
+            {
+                Members = user
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult ProfileEdit(ProfileModels model)
+        {
+            try
+            {
+                int id=GetCurrentUserId();
+                var updateMember = context.Members.FirstOrDefault(x => x.Id == id);
+                updateMember.ModifiedDate = DateTime.Now;
+                updateMember.Bio = model.Members.Bio;
+                updateMember.Name = model.Members.Name;
+                updateMember.Surname = model.Members.Surname;
+
+
+                if (string.IsNullOrEmpty(model.Members.Password) == false)
+                {
+                    updateMember.Password = model.Members.Password;
+                }
+                if (Request.Files != null && Request.Files.Count > 0)
+                {
+                    var file = Request.Files[0];
+                    var folder = Server.MapPath("~/images/upload/");
+                    var filename = Guid.NewGuid() + ".jpg";
+
+                    file.SaveAs(Path.Combine(folder, filename));
+
+                    var filepath = "images/upload/" + filename;
+                    updateMember.ProfileImageName = filepath;
+                }
+
+                context.SaveChanges();
+
+
+                return RedirectToAction("Profil", "Account");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.MyError = ex.Message;
+                int id = GetCurrentUserId();
+                var viewModel = new Models.Account.ProfileModels()
+                {
+                    Members = context.Members.FirstOrDefault(x => x.Id == id)
+                };
+                return View(viewModel);
+            }
+        }
+
     }
 }

@@ -22,8 +22,8 @@
                         <li class="media">
                             <div class="media-left">
                                 @*TODO:Kişi profil gidilecek*@
-                                <a href="#">
-                                    <img class="media-object img-circle img-thumbnail" src="~/@(string.IsNullOrEmpty(item.Members.ProfileImageName)?defaultimage:item.Members.ProfileImageName)">
+                                <a href="~/Account/Profile/@item.Members.Id">
+                                    <img class="media-object img-circle img-thumbnail" style="width:64px" src="~/@(string.IsNullOrEmpty(item.Members.ProfileImageName)?defaultimage:item.Members.ProfileImageName)">
                                 </a>
                             </div>
                             <div class="media-body">

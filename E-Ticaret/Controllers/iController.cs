@@ -282,6 +282,15 @@ namespace E_Ticaret.Controllers
             }
             return Json("");
         }
+
+        [HttpGet]
+        //[HttpPost]
+        public JsonResult GetProductDescription(int id)
+        {
+            var pro = context.Products.FirstOrDefault(x => x.Id == id);
+            return Json(pro.Description, JsonRequestBehavior.AllowGet);
+        }
+
         #region Eski Kod
         //[HttpPost]
         //public ActionResult Buy(string Address)

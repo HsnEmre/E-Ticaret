@@ -13,7 +13,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <small style="color:red;" >@ViewBag.MyError</small>
+        <small style="color:red;" >@TempData["MyError"]</small>
         <table class="table table-condensed table-striped table-hover text-center">
 
             <thead>
@@ -68,9 +68,9 @@
                     </td>
                     <td colspan="2" class="text-right">
                         <br />
-                        <button class="btn btn-danger btn-sm">
+                        <a href="~/i/RemoveBasket/0" class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-trash"></span> Sepeti Boşalt
-                        </button>
+                        </a>
                         <a href="#" class="btn btn-success btn-sm">
                             <span class="glyphicon glyphicon-send"></span> Satın Al
                         </a>

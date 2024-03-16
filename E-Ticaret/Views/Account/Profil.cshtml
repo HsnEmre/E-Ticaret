@@ -56,8 +56,10 @@
 </div>
 
 @{
-    if (Session["LogonUser"]!=null && ((E_Ticaret.DB.Members)Session["LogonUser"]).Id==Model.Members.Id)
+    if (Session["LogonUser"] != null && ((E_Ticaret.DB.Members)Session["LogonUser"]).Id == Model.Members.Id)
     {
+
+
         <div class="row">
             <div class="col-md-10 col-md-offset-1 text-right">
                 <a href="~/Account/ProfileEdit" class="btn btn-warning">
@@ -72,6 +74,35 @@
                 &nbsp;
             </div>
         </div>
+        
+            if (Model.Addresses.Any())
+            {
+                <table class="table table-condensed table-striped table-hover text-center">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Adres Adı</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Addresses)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>
+                                    <a href="~/i" class="btn btn-info btn-xs">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </a>
+                                    <a href="~/i" class="btn btn-danger btn-xs">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        
 
 
     }

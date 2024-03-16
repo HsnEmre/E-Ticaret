@@ -83,12 +83,12 @@ namespace E_Ticaret.Controllers
         [HttpGet]
         public ActionResult Profil(int id = 0)
         {
+            var adresses = new List<DB.Addresses>();
             if (id == 0)
             {
                 id = base.GetCurrentUserId();
+                adresses = context.Addresses.Where(x => x.Member_Id == id).ToList();
             }
-
-
             var user = context.Members.FirstOrDefault(x => x.Id == id);
             if (user == null)
             {
@@ -96,7 +96,8 @@ namespace E_Ticaret.Controllers
             }
             ProfileModels model = new ProfileModels()
             {
-                Members = user
+                Members = user,
+                Addresses=adresses
             };
             return View(model);
         }

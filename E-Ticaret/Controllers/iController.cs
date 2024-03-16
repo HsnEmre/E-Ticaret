@@ -105,7 +105,7 @@ namespace E_Ticaret.Controllers
                     }
                     else
                     {
-                        ViewBag.MyError = "Yeterli Stok Yok";
+                        TempData["MyError"] = "Yeterli Stok Yok";
                     }
                 }
 
@@ -113,7 +113,7 @@ namespace E_Ticaret.Controllers
             else
             {
                 var pro = context.Products.FirstOrDefault(x => x.Id == id);
-                if (pro != null && pro.IsContinued)
+                if (pro != null && pro.IsContinued && pro.UnitsInStock > 0)
                 {
                     basket.Add(new Models.i.BasketModel()
                     {
@@ -123,7 +123,7 @@ namespace E_Ticaret.Controllers
                 }
                 else if (pro.IsContinued == false && pro != null)
                 {
-                    ViewBag.MyError = "Bu ürünün satışı durduruldu";
+                    TempData["MyError"] = "Bu ürünün satışı durduruldu";
                 }
 
             }
@@ -156,7 +156,14 @@ namespace E_Ticaret.Controllers
             List<Models.i.BasketModel> basket = (List<Models.i.BasketModel>)Session["Basket"];
             if (basket != null)
             {
-                basket.RemoveAll(x => x.Product.Id == id);
+                if (id > 0)
+                {
+                    basket.RemoveAll(x => x.Product.Id == id);
+                }
+                else if (id == 0)
+                {
+                    basket.Clear();
+                }
                 Session["Basket"] = basket;
             }
             return RedirectToAction("Basket", "i");

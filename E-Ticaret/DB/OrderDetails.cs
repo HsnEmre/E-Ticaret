@@ -23,7 +23,7 @@ namespace E_Ticaret.DB
         public System.DateTime AddedDate { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
     
-        public virtual Orders Orders { get; set; }
         public virtual Products Products { get; set; }
+        public virtual Orders Orders { get; set; }
     }
 }

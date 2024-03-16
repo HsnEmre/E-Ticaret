@@ -199,7 +199,6 @@ namespace E_Ticaret.Controllers
                         Member_Id = GetCurrentUserId(),
                         Status = "SV",
                         Id = Guid.NewGuid()
-
                     };
                     //5
                     //ahmet 5
@@ -230,9 +229,9 @@ namespace E_Ticaret.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ViewBag.MyError = ex.Message;
+                    TempData["MyError"] = ex.Message;
                 }
-                return View();
+                return RedirectToAction("Buy", "i");
             }
             else
             {
@@ -240,83 +239,24 @@ namespace E_Ticaret.Controllers
             }
 
         }
-        //public ActionResult Buy(string Address)
-        //{
-        //    if (base.IsLogon())
-        //    {
-        //        try
-        //        {
-        //            var basket = (List<Models.i.BasketModel>)Session["Basket"];
-        //            var guid = new Guid(Address);
-        //            var _addres = context.Addresses.FirstOrDefault(x => x.Id == guid);
-        //            //ipariş verildi=sv
-        //            //ödeme onaylandı=öb
-        //            //ödeme bildirimi=öo
-        //            //
-
-        //            var order = new DB.Orders()
-        //            {
-        //                AddedDate = DateTime.Now,
-        //                Address = _addres.AdresDescription,
-        //                Member_Id = GetCurrentUserId(),
-        //                Status = "SV"
-        //            };
-        //            foreach (Models.i.BasketModel item in basket)
-        //            {
-        //                var oDetails = new DB.OrderDetails();
-        //                oDetails.AddedDate = DateTime.Now;
-        //                oDetails.Price = item.Product.Price * item.Count;
-        //                oDetails.Product_Id = item.Product.Id;
-        //                oDetails.Quantity = item.Count;
-        //                order.OrderDetails.Add(oDetails);
-
-        //                var _product = context.Products.FirstOrDefault(x => x.Id == item.Product.Id);
-        //                if (_product!=null && _product.UnitsInStock>=item.Count)
-        //                {
-        //                    _product.UnitsInStock = _product.UnitsInStock - item.Count; 
-        //                }
-        //                else
-        //                {
-        //                    throw new Exception($"{item.Product.Name} için yeterli stok yoktur veya Silinmiş bir ürünü almaya çalışıyorsunuz");
-        //                }
-        //            }
-        //            context.SaveChanges();
-        //            return View();
-        //        }
-        //        catch (Exception ex)
-        //        {
-
-        //            ViewBag.MyError = ex.Message;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return RedirectToAction("Login", "Account");
-        //    }
-
-        //}
         [HttpGet]
         public ActionResult Buy()
         {
-            if (base.IsLogon())
+            if (IsLogon())
             {
                 var currentId = GetCurrentUserId();
                 var orders = context.Orders.Where(x => x.Member_Id == currentId);
-                List<Models.i.BuyModels> model=new List<BuyModels>();
+                List<Models.i.BuyModels> model = new List<BuyModels>();
                 foreach (var item in orders)
                 {
-                    var buyModel = new BuyModels();
-                    buyModel.TotalPrice = item.OrderDetails.Sum(y => y.Price);
-                    buyModel.OrderName = string.Join(",", item.OrderDetails.Select(y => y.Products.Name + "(" + y.Quantity + ")"));
-                    model.Add(buyModel);
+                    var byModel = new BuyModels();
+                    byModel.TotalPrice = item.OrderDetails.Sum(y => y.Price);
+                    byModel.OrderName = string.Join(", ", item.OrderDetails.Select(y => y.Products.Name + "(" + y.Quantity + ")"));
+                    byModel.OrderStatus = item.Status;
+                    byModel.OrderId = item.Id.ToString();
+                    model.Add(byModel);
                 }
 
-                //List<Models.i.BuyModels> model = orders.Select(x => new BuyModels()
-                //{
-                //    TotalPrice = x.OrderDetails.Sum(y => y.Quantity),
-                //    OrderName = string.Join(",", x.OrderDetails.Select(y => y.Products.Name + "(" + y.Quantity + ")"))
-
-                //}).ToList();
                 return View(model);
             }
             else
@@ -326,7 +266,162 @@ namespace E_Ticaret.Controllers
 
         }
 
+        [HttpPost]
+        public JsonResult OrderNotification(OrderNotificationModel model)
+        {
+            if (string.IsNullOrEmpty(model.OrderID) == false)
+            {
+                var guid = new Guid(model.OrderID);
+                var order = context.Orders.FirstOrDefault(x => x.Id == guid);
+                if (order != null)
+                {
+                    order.Description = model.OrderDescription;
+                    order.Status = "OB";
+                    context.SaveChanges();
+                }
+            }
+            return Json("");
+        }
+        #region Eski Kod
+        //[HttpPost]
+        //public ActionResult Buy(string Address)
+        //{
+        //    if (IsLogon())
+        //    {
+        //        try
+        //        {
+        //            var basket = (List<Models.i.BasketModel>)Session["Basket"];
+        //            var guid = new Guid(Address);
+        //            var _address = context.Addresses.FirstOrDefault(x => x.Id == guid);
+        //            //Sipariş Verildi = SV
+        //            //Ödeme Bildirimi = OB
+        //            //Ödeme Onaylandı = OO
 
+        //            var order = new DB.Orders()
+        //            {
+        //                AddedDate = DateTime.Now,
+        //                Address = _address.AdresDescription,
+        //                Member_Id = GetCurrentUserId(),
+        //                Status = "SV",
+        //                Id = Guid.NewGuid()
+
+        //            };
+        //            //5
+        //            //ahmet 5
+        //            //mehmet 5
+        //            foreach (Models.i.BasketModel item in basket)
+        //            {
+        //                var oDetail = new DB.OrderDetails();
+        //                oDetail.AddedDate = DateTime.Now;
+        //                oDetail.Price = item.Product.Price * item.Count;
+        //                oDetail.Product_Id = item.Product.Id;
+        //                oDetail.Quantity = item.Count;
+        //                oDetail.Id = Guid.NewGuid();
+
+        //                order.OrderDetails.Add(oDetail);
+
+        //                var _product = context.Products.FirstOrDefault(x => x.Id == item.Product.Id);
+        //                if (_product != null && _product.UnitsInStock >= item.Count)
+        //                {
+        //                    _product.UnitsInStock = _product.UnitsInStock - item.Count;
+        //                }
+        //                else
+        //                {
+        //                    throw new Exception(string.Format("{0} ürünü için yeterli stok yoktur veya silinmiş bir ürünü almaya çalışıyorsunuz.", item.Product.Name));
+        //                }
+        //            }
+        //            context.Orders.Add(order);
+        //            context.SaveChanges();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            ViewBag.MyError = ex.Message;
+        //        }
+        //        return View();
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
+
+        //}
+
+        //[HttpGet]
+        //public ActionResult Buy()
+        //{
+        //    if (base.IsLogon())
+        //    {
+        //        var currentId = GetCurrentUserId();
+        //        var orders = context.Orders.Where(x => x.Member_Id == currentId);
+        //        List<Models.i.BuyModels> model = new List<BuyModels>();
+        //        foreach (var item in orders)
+        //        {
+        //            var buyModel = new BuyModels();
+        //            buyModel.TotalPrice = item.OrderDetails.Sum(y => y.Price);
+        //            buyModel.OrderName = string.Join(",", item.OrderDetails.Select(y => y.Products.Name + "(" + y.Quantity + ")"));
+        //            buyModel.OrderStatus = item.Status;
+        //            buyModel.OrderId = item.Id.ToString();
+        //            model.Add(buyModel);
+        //        }
+
+        //        return View(model);
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
+
+        //}
+
+        //[HttpPost]
+        //public JsonResult OrderNotification(OrderNotificationModel model)
+        //{
+        //    if (string.IsNullOrEmpty(model.OrderID) == false)
+        //    {
+        //        var guid = new Guid(model.OrderID);
+        //        var order = context.Orders.FirstOrDefault(x => x.Id == guid);
+        //        if (order != null)
+        //        {
+        //            order.Description = model.OrderDescription;
+        //            order.Status = "OB";
+        //            context.SaveChanges();
+        //        }
+        //    }
+        //    return Json("");
+        //}
+
+        //[HttpPost]
+
+        //public JsonResult OrderNotification(OrderNotificationModel model)
+        //{
+        //    if (string.IsNullOrEmpty(model.OrderID) == false)
+        //    {
+        //        var guid = new Guid(model.OrderID);
+        //        var order = context.Orders.FirstOrDefault(x => x.Id == guid);
+        //        if (order != null)
+        //        {
+        //            order.Description = model.OrderDescription;
+        //            order.Status = "OB";
+        //            context.SaveChanges();
+        //        }
+        //    }
+        //    return Json("");
+        //}
+
+        //public JsonResult OrderNotification(OrderNotificationModel model)
+        //{
+        //    if (string.IsNullOrEmpty(model.OrderID) == false)
+        //    {
+        //        var guid = new Guid(model.OrderID);
+        //        var order = context.Orders.FirstOrDefault(x => x.Id == guid);
+        //        if (order!=null)
+        //        {
+        //            order.Description = model.OrderDescription;
+        //            context.SaveChanges();
+        //        }
+        //    }
+        //    return Json("");
+        //}
 
         //public ActionResult Product(DB.Comments comment)
         //{
@@ -346,5 +441,7 @@ namespace E_Ticaret.Controllers
         //    }
         //    return RedirectToAction("Product", "i");
         //}
+        #endregion
+
     }
 }

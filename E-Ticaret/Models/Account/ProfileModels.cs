@@ -9,6 +9,7 @@ namespace E_Ticaret.Models.Account
     {
         public DB.Members Members { get; set; }
         public List<DB.Addresses> Addresses { get; set; }
+        public DB.Addresses CurrentAddres { get; set; }
     }
 
 }

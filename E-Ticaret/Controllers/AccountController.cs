@@ -81,13 +81,19 @@ namespace E_Ticaret.Controllers
             return RedirectToAction("Login", "Account");
         }
         [HttpGet]
-        public ActionResult Profil(int id = 0)
+        public ActionResult Profil(int id = 0, string ad = "")
         {
             List<DB.Addresses> addresses = null;
+            DB.Addresses currentAddress = new DB.Addresses();
             if (id == 0)
             {
                 id = base.GetCurrentUserId();
                 addresses = context.Addresses.Where(x => x.Member_Id == id).ToList();
+                if (!string.IsNullOrEmpty(ad))
+                {
+                    var guid = new Guid(ad);
+                    currentAddress = context.Addresses.FirstOrDefault(x => x.Id == guid);
+                }
             }
             var user = context.Members.FirstOrDefault(x => x.Id == id);
             if (user == null)
@@ -97,7 +103,8 @@ namespace E_Ticaret.Controllers
             ProfileModels model = new ProfileModels()
             {
                 Members = user,
-                Addresses = addresses
+                Addresses = addresses,
+                CurrentAddres = currentAddress
             };
             return View(model);
         }
@@ -206,7 +213,7 @@ namespace E_Ticaret.Controllers
         {
             DB.Addresses _addresses = null;
 
-            if (adres.Id== Guid.Empty)
+            if (adres.Id == Guid.Empty)
             {
                 adres.Id = Guid.NewGuid();
                 adres.AddedDate = DateTime.Now;
@@ -219,10 +226,22 @@ namespace E_Ticaret.Controllers
                 _addresses.ModifiedDate = DateTime.Now;
                 _addresses.Name = adres.Name;
                 _addresses.AdresDescription = adres.AdresDescription;
-                
+
             }
             context.SaveChanges();
             return RedirectToAction("Profil", "Account");
+        }
+
+        [HttpGet]
+        public ActionResult RemoveAdres(string id)
+        {
+            var guid = new Guid(id);
+            var address = context.Addresses.FirstOrDefault(x => x.Id == guid);
+            context.Addresses.Remove(address);
+            context.SaveChanges();
+
+            return RedirectToAction("Profil", "Account");
+
         }
     }
 }

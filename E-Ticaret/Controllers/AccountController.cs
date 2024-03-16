@@ -83,11 +83,11 @@ namespace E_Ticaret.Controllers
         [HttpGet]
         public ActionResult Profil(int id = 0)
         {
-            var adresses = new List<DB.Addresses>();
+            List<DB.Addresses> addresses = null;
             if (id == 0)
             {
                 id = base.GetCurrentUserId();
-                adresses = context.Addresses.Where(x => x.Member_Id == id).ToList();
+                addresses = context.Addresses.Where(x => x.Member_Id == id).ToList();
             }
             var user = context.Members.FirstOrDefault(x => x.Id == id);
             if (user == null)
@@ -97,7 +97,7 @@ namespace E_Ticaret.Controllers
             ProfileModels model = new ProfileModels()
             {
                 Members = user,
-                Addresses=adresses
+                Addresses = addresses
             };
             return View(model);
         }
@@ -200,5 +200,29 @@ namespace E_Ticaret.Controllers
             //}
         }
 
+
+        [HttpPost]
+        public ActionResult Addresses(DB.Addresses adres)
+        {
+            DB.Addresses _addresses = null;
+
+            if (adres.Id== Guid.Empty)
+            {
+                adres.Id = Guid.NewGuid();
+                adres.AddedDate = DateTime.Now;
+                adres.Member_Id = base.GetCurrentUserId();
+                context.Addresses.Add(adres);
+            }
+            else
+            {
+                _addresses = context.Addresses.FirstOrDefault(x => x.Id == adres.Id);
+                _addresses.ModifiedDate = DateTime.Now;
+                _addresses.Name = adres.Name;
+                _addresses.AdresDescription = adres.AdresDescription;
+                
+            }
+            context.SaveChanges();
+            return RedirectToAction("Profil", "Account");
+        }
     }
 }

@@ -13,7 +13,7 @@
 
 <div class="row">
     <div class="col-md-12">
-
+        <small style="color:red;" >@ViewBag.MyError</small>
         <table class="table table-condensed table-striped table-hover text-center">
 
             <thead>
@@ -41,16 +41,16 @@
                                 <a href="~/i/AddBasket/@item.Product.Id" class="btn btn-warning btn-xs">
                                     <span class="glyphicon glyphicon-plus"></span>
                                 </a>
-                                <a  href="~/RomeveBasket/@item.Product.Id" class="btn btn-info btn-xs">
+                                <a  href="~/i/AddBasket/@item.Product.Id?remove=true" class="btn btn-info btn-xs">
                                     <span class="glyphicon glyphicon-minus"></span>
                                 </a>
                                 &nbsp;|&nbsp;
                                 <a href="~/i/Product/@item.Product.Id" class="btn btn-info btn-xs">
                                     <span class="glyphicon glyphicon-eye-open"></span>
                                 </a>
-                                <button class="btn btn-danger btn-xs">
+                                <a href="~/i/RemoveBasket/@item.Product.Id" class="btn btn-danger btn-xs">
                                     <span class="glyphicon glyphicon-trash"></span>
-                                </button>
+                                </a>
                             </td>
                         </tr>
                     }

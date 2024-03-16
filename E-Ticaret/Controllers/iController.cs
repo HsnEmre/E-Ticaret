@@ -76,7 +76,7 @@ namespace E_Ticaret.Controllers
             return RedirectToAction("Product", "i");
         }
         [HttpGet]
-        public ActionResult AddBasket(int id)
+        public ActionResult AddBasket(int id, bool remove = false)
         {
             List<Models.i.BasketModel> basket = null;
             if (Session["Basket"] == null)
@@ -91,12 +91,29 @@ namespace E_Ticaret.Controllers
             if (basket.Any(x => x.Product.Id == id))
             {
                 var pro = basket.FirstOrDefault(x => x.Product.Id == id);
-                pro.Count += 1;
+                if (remove && pro.Count > 0)
+                {
+                    pro.Count -= 1;
+
+
+                }
+                else
+                {
+                    if (pro.Product.UnitsInStock > pro.Count)
+                    {
+                        pro.Count += 1;
+                    }
+                    else
+                    {
+                        ViewBag.MyError = "Yeterli Stok Yok";
+                    }
+                }
+
             }
             else
             {
                 var pro = context.Products.FirstOrDefault(x => x.Id == id);
-                if (pro!=null)
+                if (pro != null && pro.IsContinued)
                 {
                     basket.Add(new Models.i.BasketModel()
                     {
@@ -104,8 +121,13 @@ namespace E_Ticaret.Controllers
                         Product = pro,
                     });
                 }
-                
+                else if (pro.IsContinued == false && pro != null)
+                {
+                    ViewBag.MyError = "Bu ürünün satışı durduruldu";
+                }
+
             }
+            basket.RemoveAll(x => x.Count < 1);
             Session["Basket"] = basket;
 
             return RedirectToAction("Basket", "i");
@@ -114,21 +136,31 @@ namespace E_Ticaret.Controllers
         [HttpGet]
         public ActionResult Basket()
         {
-            List<Models.i.BasketModel>  model = (List<Models.i.BasketModel>)Session["Basket"];
+            List<Models.i.BasketModel> model = (List<Models.i.BasketModel>)Session["Basket"];
             if (model == null)
             {
-               model=new List<Models.i.BasketModel> ();
+                model = new List<Models.i.BasketModel>();
             }
 
 
-           
+
             ViewBag.TotalPrice = model.Select(x => x.Product.Price * x.Count).Sum();
 
 
             return View(model);
         }
 
-
+        [HttpGet]
+        public ActionResult RemoveBasket(int id)
+        {
+            List<Models.i.BasketModel> basket = (List<Models.i.BasketModel>)Session["Basket"];
+            if (basket != null)
+            {
+                basket.RemoveAll(x => x.Product.Id == id);
+                Session["Basket"] = basket;
+            }
+            return RedirectToAction("Basket", "i");
+        }
 
 
         //public ActionResult Product(DB.Comments comment)

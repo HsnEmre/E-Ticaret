@@ -13,7 +13,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <small style="color:red;" >@TempData["MyError"]</small>
+        <small style="color:red;">@TempData["MyError"]</small>
         <table class="table table-condensed table-striped table-hover text-center">
 
             <thead>
@@ -41,7 +41,7 @@
                                 <a href="~/i/AddBasket/@item.Product.Id" class="btn btn-warning btn-xs">
                                     <span class="glyphicon glyphicon-plus"></span>
                                 </a>
-                                <a  href="~/i/AddBasket/@item.Product.Id?remove=true" class="btn btn-info btn-xs">
+                                <a href="~/i/AddBasket/@item.Product.Id?remove=true" class="btn btn-info btn-xs">
                                     <span class="glyphicon glyphicon-minus"></span>
                                 </a>
                                 &nbsp;|&nbsp;
@@ -59,6 +59,15 @@
             </tbody>
 
             <tfoot>
+                @if (ViewBag.currentAddresses != null && ((List<SelectListItem>)ViewBag.currentAddresses) != null)
+                {
+                    <tr>
+                        <td colspan="3">
+                            @Html.DropDownList("Address", ((List<SelectListItem>)ViewBag.currentAddresses), new { @class = "form-control" })
+                        </td>
+                    </tr>
+                }
+
                 <tr>
                     <td>
                         &nbsp;
@@ -71,7 +80,7 @@
                         <a href="~/i/RemoveBasket/0" class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-trash"></span> Sepeti Boşalt
                         </a>
-                        <a href="#" class="btn btn-success btn-sm">
+                        <a href="~/i/Buy" class="btn btn-success btn-sm">
                             <span class="glyphicon glyphicon-send"></span> Satın Al
                         </a>
                     </td>

@@ -141,9 +141,17 @@ namespace E_Ticaret.Controllers
             {
                 model = new List<Models.i.BasketModel>();
             }
+            if (base.IsLogon())
+            {
+                int currentId = GetCurrentUserId();
 
-
-
+                ViewBag.currentAddresses = context.Addresses.Where(x => x.Member_Id == currentId).Select(x => new
+                SelectListItem()
+                {
+                    Text=x.Name,
+                    Value=x.Id.ToString()
+                }).ToList();
+            }
             ViewBag.TotalPrice = model.Select(x => x.Product.Price * x.Count).Sum();
 
 
@@ -168,6 +176,21 @@ namespace E_Ticaret.Controllers
             }
             return RedirectToAction("Basket", "i");
         }
+
+        [HttpGet]
+        public ActionResult Buy()
+        {
+            if (base.IsLogon())
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+        }
+
 
 
         //public ActionResult Product(DB.Comments comment)

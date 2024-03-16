@@ -30,5 +30,17 @@ namespace E_Ticaret.Controllers
             return ((DB.Members)Session["LogonUser"]).Id;
         }
 
+        protected bool IsLogon()
+        {
+            if (Session["LogonUser"] == null) return false;
+            else
+            {
+                return true;
+            }
+            
+        }
+
+
+
     }
 }

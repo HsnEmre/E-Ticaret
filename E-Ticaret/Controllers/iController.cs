@@ -197,7 +197,9 @@ namespace E_Ticaret.Controllers
                         AddedDate = DateTime.Now,
                         Address = _address.AdresDescription,
                         Member_Id = GetCurrentUserId(),
-                        Status = "SV"
+                        Status = "SV",
+                        Id = Guid.NewGuid()
+
                     };
                     //5
                     //ahmet 5
@@ -209,6 +211,7 @@ namespace E_Ticaret.Controllers
                         oDetail.Price = item.Product.Price * item.Count;
                         oDetail.Product_Id = item.Product.Id;
                         oDetail.Quantity = item.Count;
+                        oDetail.Id = Guid.NewGuid();
 
                         order.OrderDetails.Add(oDetail);
 
@@ -222,6 +225,7 @@ namespace E_Ticaret.Controllers
                             throw new Exception(string.Format("{0} ürünü için yeterli stok yoktur veya silinmiş bir ürünü almaya çalışıyorsunuz.", item.Product.Name));
                         }
                     }
+                    context.Orders.Add(order);
                     context.SaveChanges();
                 }
                 catch (Exception ex)
@@ -296,7 +300,24 @@ namespace E_Ticaret.Controllers
         {
             if (base.IsLogon())
             {
-                return View();
+                var currentId = GetCurrentUserId();
+                var orders = context.Orders.Where(x => x.Member_Id == currentId);
+                List<Models.i.BuyModels> model=new List<BuyModels>();
+                foreach (var item in orders)
+                {
+                    var buyModel = new BuyModels();
+                    buyModel.TotalPrice = item.OrderDetails.Sum(y => y.Price);
+                    buyModel.OrderName = string.Join(",", item.OrderDetails.Select(y => y.Products.Name + "(" + y.Quantity + ")"));
+                    model.Add(buyModel);
+                }
+
+                //List<Models.i.BuyModels> model = orders.Select(x => new BuyModels()
+                //{
+                //    TotalPrice = x.OrderDetails.Sum(y => y.Quantity),
+                //    OrderName = string.Join(",", x.OrderDetails.Select(y => y.Products.Name + "(" + y.Quantity + ")"))
+
+                //}).ToList();
+                return View(model);
             }
             else
             {

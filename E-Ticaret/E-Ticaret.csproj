@@ -241,6 +241,7 @@
     <Content Include="Views\Account\Profil.cshtml" />
     <Content Include="Views\Account\ProfileEdit.cshtml" />
     <Content Include="Views\i\Basket.cshtml" />
+    <Content Include="Views\i\Buy.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

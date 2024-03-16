@@ -3,6 +3,7 @@ using E_Ticaret.Models;
 using E_Ticaret.Models.i;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
@@ -148,8 +149,8 @@ namespace E_Ticaret.Controllers
                 ViewBag.currentAddresses = context.Addresses.Where(x => x.Member_Id == currentId).Select(x => new
                 SelectListItem()
                 {
-                    Text=x.Name,
-                    Value=x.Id.ToString()
+                    Text = x.Name,
+                    Value = x.Id.ToString()
                 }).ToList();
             }
             ViewBag.TotalPrice = model.Select(x => x.Product.Price * x.Count).Sum();
@@ -177,6 +178,119 @@ namespace E_Ticaret.Controllers
             return RedirectToAction("Basket", "i");
         }
 
+        [HttpPost]
+        public ActionResult Buy(string Address)
+        {
+            if (IsLogon())
+            {
+                try
+                {
+                    var basket = (List<Models.i.BasketModel>)Session["Basket"];
+                    var guid = new Guid(Address);
+                    var _address = context.Addresses.FirstOrDefault(x => x.Id == guid);
+                    //Sipariş Verildi = SV
+                    //Ödeme Bildirimi = OB
+                    //Ödeme Onaylandı = OO
+
+                    var order = new DB.Orders()
+                    {
+                        AddedDate = DateTime.Now,
+                        Address = _address.AdresDescription,
+                        Member_Id = GetCurrentUserId(),
+                        Status = "SV"
+                    };
+                    //5
+                    //ahmet 5
+                    //mehmet 5
+                    foreach (Models.i.BasketModel item in basket)
+                    {
+                        var oDetail = new DB.OrderDetails();
+                        oDetail.AddedDate = DateTime.Now;
+                        oDetail.Price = item.Product.Price * item.Count;
+                        oDetail.Product_Id = item.Product.Id;
+                        oDetail.Quantity = item.Count;
+
+                        order.OrderDetails.Add(oDetail);
+
+                        var _product = context.Products.FirstOrDefault(x => x.Id == item.Product.Id);
+                        if (_product != null && _product.UnitsInStock >= item.Count)
+                        {
+                            _product.UnitsInStock = _product.UnitsInStock - item.Count;
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format("{0} ürünü için yeterli stok yoktur veya silinmiş bir ürünü almaya çalışıyorsunuz.", item.Product.Name));
+                        }
+                    }
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.MyError = ex.Message;
+                }
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+        }
+        //public ActionResult Buy(string Address)
+        //{
+        //    if (base.IsLogon())
+        //    {
+        //        try
+        //        {
+        //            var basket = (List<Models.i.BasketModel>)Session["Basket"];
+        //            var guid = new Guid(Address);
+        //            var _addres = context.Addresses.FirstOrDefault(x => x.Id == guid);
+        //            //ipariş verildi=sv
+        //            //ödeme onaylandı=öb
+        //            //ödeme bildirimi=öo
+        //            //
+
+        //            var order = new DB.Orders()
+        //            {
+        //                AddedDate = DateTime.Now,
+        //                Address = _addres.AdresDescription,
+        //                Member_Id = GetCurrentUserId(),
+        //                Status = "SV"
+        //            };
+        //            foreach (Models.i.BasketModel item in basket)
+        //            {
+        //                var oDetails = new DB.OrderDetails();
+        //                oDetails.AddedDate = DateTime.Now;
+        //                oDetails.Price = item.Product.Price * item.Count;
+        //                oDetails.Product_Id = item.Product.Id;
+        //                oDetails.Quantity = item.Count;
+        //                order.OrderDetails.Add(oDetails);
+
+        //                var _product = context.Products.FirstOrDefault(x => x.Id == item.Product.Id);
+        //                if (_product!=null && _product.UnitsInStock>=item.Count)
+        //                {
+        //                    _product.UnitsInStock = _product.UnitsInStock - item.Count; 
+        //                }
+        //                else
+        //                {
+        //                    throw new Exception($"{item.Product.Name} için yeterli stok yoktur veya Silinmiş bir ürünü almaya çalışıyorsunuz");
+        //                }
+        //            }
+        //            context.SaveChanges();
+        //            return View();
+        //        }
+        //        catch (Exception ex)
+        //        {
+
+        //            ViewBag.MyError = ex.Message;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
+
+        //}
         [HttpGet]
         public ActionResult Buy()
         {

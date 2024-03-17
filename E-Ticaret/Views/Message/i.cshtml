@@ -44,12 +44,12 @@
                             @msg.Subject
                         </td>
                         <td>
-                            <button class="btn btn-info btn-xs">
+                            <a href="~/Message/MessageReplies/@msg.Id" class="btn btn-info btn-xs">
                                 <span class="glyphicon glyphicon-eye-open"></span>
-                            </button>
-                            <button class="btn btn-danger btn-xs">
+                            </a>
+                            <a href="~/Message/RemoveMessageReplies/@msg.Id" class="btn btn-danger btn-xs">
                                 <span class="glyphicon glyphicon-trash"></span>
-                            </button>
+                            </a>
                         </td>
                     </tr>
                 }

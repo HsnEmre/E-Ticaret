@@ -232,6 +232,8 @@
     <Compile Include="Models\i\OrderNotificationModel.cs" />
     <Compile Include="Models\i\ProductModels.cs" />
     <Compile Include="Models\Messages\iModels.cs" />
+    <Compile Include="Models\Messages\MessageRepliesModel.cs" />
+    <Compile Include="Models\Messages\RenderMessageModel.cs" />
     <Compile Include="Models\Messages\SendMessageModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -251,6 +253,8 @@
     <Content Include="Views\i\Basket.cshtml" />
     <Content Include="Views\i\Buy.cshtml" />
     <Content Include="Views\Message\i.cshtml" />
+    <Content Include="Views\Message\MessageReplies.cshtml" />
+    <Content Include="Views\Shared\_Message.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

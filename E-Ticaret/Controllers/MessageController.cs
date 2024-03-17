@@ -1,4 +1,5 @@
-﻿using System;
+﻿using E_Ticaret.Models.Messages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,6 +10,7 @@ namespace E_Ticaret.Controllers
     public class MessageController : BaseController
     {
         // GET: Message
+        [HttpGet]
         public ActionResult i()
         {
             if (IsLogon() == false)
@@ -30,11 +32,13 @@ namespace E_Ticaret.Controllers
 
             #endregion
             #region Mesaj Listesi,
-            var mList = context.Messages.Where(x => x.ToMemberId == currentId && x.MessageReplies.Any(y => y.Member_Id == currentId)).ToList();
+            var mList = context.Messages.Where(x => x.ToMemberId == currentId || x.MessageReplies.Any(y => y.Member_Id == currentId)).ToList();
             model.Messages = mList;
             #endregion
             return View(model);
         }
+        //[HttpGet]
+        [HttpPost]
         public ActionResult SendMessage(Models.Messages.SendMessageModel message)
         {
             if (IsLogon() == false)
@@ -64,6 +68,48 @@ namespace E_Ticaret.Controllers
             context.SaveChanges();
 
             return RedirectToAction("i", "message");
+        }
+
+        [HttpGet]
+        public ActionResult MessageReplies(string id)
+        {
+
+            if (IsLogon() == false)
+            {
+                return RedirectToAction("index", "i");
+            }
+
+            MessageRepliesModel model = new MessageRepliesModel();
+            var guid = new Guid(id);
+            model.MessageReplies = context.MessageReplies.Where(x => x.MessageId == guid).OrderBy(x => x.AddedDate).ToList();
+
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult MessageReplies(DB.MessageReplies message)
+        {
+            if (IsLogon() == false) return RedirectToAction("index", "i");
+
+
+
+            message.AddedDate = DateTime.Now;
+            message.Id = Guid.NewGuid();
+            message.Member_Id = GetCurrentUserId();
+            context.MessageReplies.Add(message);
+            context.SaveChanges();
+
+            return RedirectToAction("MessageReplies", "Message", new { id = message.MessageId });
+        }
+
+        [HttpGet]
+        public ActionResult RenderMessage()
+        {
+            RenderMessageModel model = new RenderMessageModel();
+            var currentId = GetCurrentUserId();
+            var mList = context.Messages.Where(x => x.ToMemberId == currentId || x.MessageReplies.Any(y => y.Member_Id == currentId)).OrderBy(x => x.AddedDate);
+            model.Messages = mList.Take(5).ToList();
+            model.Count = mList.Count();
+            return PartialView("_Message", model);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Mesajlar";
+    var currenUser = (E_Ticaret.DB.Members)Session["LogonUser"];
 }
 
 <div class="row">
@@ -38,6 +39,13 @@
 
 
                     <tr>
+                        <td>
+                            @if (msg.IsRead)
+                            {
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            }
+                        </td>
+
                         <td>@msg.AddedDate.ToShortDateString()</td>
                         <td>@{string.Format("{0}  {1} ({2})", user.Name, user.Surname, user.MemberType.ToString());}</td>
                         <td>
@@ -47,9 +55,12 @@
                             <a href="~/Message/MessageReplies/@msg.Id" class="btn btn-info btn-xs">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             </a>
-                            <a href="~/Message/RemoveMessageReplies/@msg.Id" class="btn btn-danger btn-xs">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </a>
+                            @if (user.Id == currenUser.Id)
+                            {
+                                <a href="~/Message/RemoveMessageReplies/@msg.Id" class="btn btn-danger btn-xs">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                            }
                         </td>
                     </tr>
                 }
@@ -91,12 +102,12 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.TextBox("Subject", "", new { placeholder = "Konu", @class = "form-control" })
+                        @Html.TextBox("Subject", "", new { placeholder = "Konu", @class = "form-control", required = "required" })
 
                     </div>
 
                     <div class="form-group">
-                        @Html.TextArea("MessageBody", "", new { placeholder = "Mesaj Metni", @class = "form-control" })
+                        @Html.TextArea("MessageBody", "", new { placeholder = "Mesaj Metni", @class = "form-control", required = "required" })
                     </div>
 
                 </div>

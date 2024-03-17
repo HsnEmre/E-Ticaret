@@ -73,14 +73,23 @@ namespace E_Ticaret.Controllers
         [HttpGet]
         public ActionResult MessageReplies(string id)
         {
+            var guid = new Guid(id);
 
             if (IsLogon() == false)
             {
                 return RedirectToAction("index", "i");
             }
+            var currentid = GetCurrentUserId();
+
+            DB.Messages messages = context.Messages.FirstOrDefault(x => x.Id == guid);
+            if (messages.ToMemberId == currentid)
+            {
+                messages.IsRead = true;
+                context.SaveChanges();
+            }
 
             MessageRepliesModel model = new MessageRepliesModel();
-            var guid = new Guid(id);
+
             model.MessageReplies = context.MessageReplies.Where(x => x.MessageId == guid).OrderBy(x => x.AddedDate).ToList();
 
             return View(model);
@@ -110,6 +119,20 @@ namespace E_Ticaret.Controllers
             model.Messages = mList.Take(5).ToList();
             model.Count = mList.Count();
             return PartialView("_Message", model);
+        }
+
+        public ActionResult RemoveMessageReplies(string id)
+        {
+            var guid = new Guid(id);
+            var mrelies = context.MessageReplies.Where(x => x.MessageId == guid);
+
+            context.MessageReplies.RemoveRange(mrelies);
+
+            var message = context.Messages.FirstOrDefault(x => x.Id == guid);
+            context.Messages.Remove(message);
+            context.SaveChanges();
+
+            return RedirectToAction("i", "Message");
         }
     }
 }

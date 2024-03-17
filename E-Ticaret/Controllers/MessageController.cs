@@ -11,9 +11,15 @@ namespace E_Ticaret.Controllers
         // GET: Message
         public ActionResult i()
         {
+            if (IsLogon() == false)
+            {
+                return RedirectToAction("index", "i");
+            }
+
             Models.Messages.iModels model = new Models.Messages.iModels();
             model.Users = new List<SelectListItem>();
-            var users = context.Members.Where(x => ((int)x.MemberType) > 0).ToList();
+            var currentId = GetCurrentUserId();
+            var users = context.Members.Where(x => ((int)x.MemberType) > 0 && x.Id!=currentId ).ToList();
             model.Users = users.Select(x => new SelectListItem()
             {
                 Value = x.Id.ToString(),
@@ -22,9 +28,34 @@ namespace E_Ticaret.Controllers
             }).ToList();
             return View(model);
         }
-        public ActionResult SendMessage(DB.Messages message)
+        public ActionResult SendMessage(Models.Messages.SendMessageModel message)
         {
-            return View();
+            if (IsLogon() == false)
+            {
+                return RedirectToAction("index", "i");
+            }
+
+            DB.Messages mesaj = new DB.Messages()
+            {
+                Id = Guid.NewGuid(),
+                AddedDate = DateTime.Now,
+                IsRead = false,
+                Subject = message.Subject
+            };
+            var mRep = new DB.MessageReplies()
+            {
+                Id=Guid.NewGuid(),
+                AddedDate = DateTime.Now,
+                Member_Id = GetCurrentUserId(),
+                Text = message.MessageBody
+            };
+
+            mesaj.MessageReplies.Add(mRep);
+
+            context.Messages.Add(mesaj);
+            context.SaveChanges();
+
+            return RedirectToAction("i", "message");
         }
     }
 }

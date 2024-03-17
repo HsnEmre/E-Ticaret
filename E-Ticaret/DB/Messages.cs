@@ -27,6 +27,7 @@ namespace E_Ticaret.DB
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public int ToMemberId { get; set; }
     
+        public virtual Members Members { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MessageReplies> MessageReplies { get; set; }
     }

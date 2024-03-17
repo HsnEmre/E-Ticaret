@@ -32,7 +32,7 @@ namespace E_Ticaret.Controllers
                     throw new Exception("Bu e-mail adresi zaten kayıtlıdır!");
                 }
 
-                user.Member.MemberType = DB.Membertypes.Customer;
+                user.Member.MemberType = DB.Membertypess.Customer;
                 user.Member.AddedDate = DateTime.Now;
                 context.Members.Add(user.Member);
                 context.SaveChanges();

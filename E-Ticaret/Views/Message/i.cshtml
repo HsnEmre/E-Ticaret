@@ -29,21 +29,32 @@
             <tbody>
                 <!--tr*4>(td>{10.02.2008})+(td>{muratbaseren})+(td>lorem3)+(td>button[class="btn btn-info btn-xs"]>span[class="glyphicon glyphicon-eye-open"]^button[class="btn btn-danger btn-xs"]>span[class="glyphicon glyphicon-trash"])-->
 
-                <tr>
-                    <td>10.02.2008</td>
-                    <td>muratbaseren</td>
-                    <td>
-                        Sit amet, consectetur.
-                    </td>
-                    <td>
-                        <button class="btn btn-info btn-xs">
-                            <span class="glyphicon glyphicon-eye-open"></span>
-                        </button>
-                        <button class="btn btn-danger btn-xs">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </button>
-                    </td>
-                </tr>
+
+                @foreach (var msg in Model.Messages)
+                {
+
+
+                    var user = @msg.MessageReplies.OrderBy(x => x.AddedDate).FirstOrDefault().Members;
+
+
+                    <tr>
+                        <td>@msg.AddedDate.ToShortDateString()</td>
+                        <td>@{string.Format("{0}  {1} ({2})", user.Name, user.Surname, user.MemberType.ToString());}</td>
+                        <td>
+                            @msg.Subject
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-xs">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </button>
+                            <button class="btn btn-danger btn-xs">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                }
+
+
             </tbody>
 
             <tfoot>

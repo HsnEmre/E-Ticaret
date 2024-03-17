@@ -193,7 +193,13 @@
     <Compile Include="DB\Members.cs">
       <DependentUpon>ETicaretModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DB\MemberType.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DB\Membertypes.cs">
+      <DependentUpon>ETicaretModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Membertypess.cs">
       <DependentUpon>ETicaretModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DB\MessageReplies.cs">
@@ -209,9 +215,6 @@
       <DependentUpon>ETicaretModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DB\Products.cs">
-      <DependentUpon>ETicaretModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DB\sysdiagrams.cs">
       <DependentUpon>ETicaretModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">

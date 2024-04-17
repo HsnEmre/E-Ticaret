@@ -146,7 +146,7 @@ namespace E_Ticaret.Controllers
                         var fileName = Guid.NewGuid() + ".jpg";
                         file.SaveAs(Path.Combine(folder, fileName));
 
-                        var filePath = "images/upload/" + fileName;
+                        var filePath = "İmages/Upload/" + fileName;
                         updateMember.ProfileImageName = filePath;
                     }
                 }

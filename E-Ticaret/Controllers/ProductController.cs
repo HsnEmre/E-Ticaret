@@ -18,7 +18,7 @@ namespace E_Ticaret.Controllers
                 return RedirectToAction("i", "Product");
             }
 
-            var products = context.Products.ToList();
+            var products = context.Products.Where(x=>x.IsDeleted==false||x.IsDeleted==null).ToList();
 
             return View(products);
         }
@@ -68,6 +68,7 @@ namespace E_Ticaret.Controllers
                 dbProduct.Name = products.Name;
                 dbProduct.Price = products.Price;
                 dbProduct.UnitsInStock = products.UnitsInStock;
+                products.IsDeleted = false;
                 if (string.IsNullOrEmpty(productImagePath) == false)
                 {
                     dbProduct.ProductImageName = productImagePath;
@@ -76,7 +77,7 @@ namespace E_Ticaret.Controllers
             else
             {
                 products.AddedDate = DateTime.Now;
-
+                products.IsDeleted= false;
                 products.ProductImageName = productImagePath;
 
                 context.Entry(products).State = System.Data.Entity.EntityState.Added;

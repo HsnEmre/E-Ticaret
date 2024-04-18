@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<E_Ticaret.DB.Products>
 
 @{
-    ViewBag.Title = "";
+    ViewBag.Title = "i";
 }
 
 <h2>Ürünler</h2>
 
 <p>
-    @Html.ActionLink("Yeni Ürün Ekle ", "Create")
+    @Html.ActionLink("Yeni Ürün", "Create")
 </p>
 <table class="table">
     <tr>
@@ -15,15 +15,12 @@
             @Html.DisplayName("Ürün Adı")
         </th>
         <th>
-            @Html.DisplayName("Ürün Fiyatı")
-        </th>
-
-        <th>
-            @Html.DisplayName("Ürün Resmi")
+            @Html.DisplayName("Fiyatı")
         </th>
         <th>
-            @Html.DisplayName("Ürün Kategorisi")
+            @Html.DisplayName("Kategorisi")
         </th>
+        <th></th>
     </tr>
 
     @foreach (var item in Model)
@@ -36,14 +33,21 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductImageName)
+                @Html.DisplayFor(modelItem => item.Categories.Name)
             </td>
-            @Html.DisplayFor(modelItem => item.Categories.Name)
             <td>
-                @Html.ActionLink("Düzenle", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Sil", "Delete", new { id = item.Id })
+                <a href="@Url.Action("Edit",new { id=item.Id })" class="btn btn-info">Düzenle</a> |
+
+                <button type="button" onclick="DeleteProduct('@Url.Action("Delete", new { id=item.Id })')" class="btn btn-danger">Sil</button>
             </td>
         </tr>
     }
 
 </table>
+<script>
+    function DeleteProduct(url) {
+        if (confirm("Silmek İstediğine Emin Misin?")) {
+            location.href = url;
+        }
+    }
+</script>

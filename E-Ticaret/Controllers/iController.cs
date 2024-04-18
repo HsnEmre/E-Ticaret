@@ -19,7 +19,7 @@ namespace E_Ticaret.Controllers
         public ActionResult Index(int id = 0)
         {
             //context.Members.ToList();
-            IQueryable<DB.Products> products = context.Products.Where(x => x.IsDeleted == false || x.IsDeleted == null);
+            IQueryable<DB.Products> products = context.Products.OrderByDescending(x=>x.AddedDate).Where(x => x.IsDeleted == false || x.IsDeleted == null);
             DB.Categories category = null;
             if (id > 0)
             {

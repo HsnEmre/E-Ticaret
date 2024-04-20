@@ -1,6 +1,10 @@
 ﻿@model List<E_Ticaret.Models.i.BuyModels>
 @{
     ViewBag.Title = "Siparişleriniz";
+
+    var currentUser = (E_Ticaret.DB.Members)Session["LogonUser"];
+    var currentUserType = (int)currentUser.MemberType;
+
 }
 
 <h2>Sipariş Sayfası</h2>
@@ -14,6 +18,7 @@
             <!--th*4>{kolon adı}-->
             <th class="text-center">Sipariş</th>
             <th class="text-center">Fiyat</th>
+            <th class="text-center"></th>
             <th class="text-center"></th>
         </tr>
     </thead>
@@ -41,6 +46,11 @@
                         <span>Ödeme Onaylandı</span>
                     }
 
+                </td>
+                <td>
+                    <button type="button" class="btn btn-info" onclick="ShowDes('@item.OrderId')">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                    </button>
                 </td>
             </tr>
         }
@@ -70,7 +80,75 @@
     </div>
 </div>
 
+<div class="modal fade" id="orderStatusinfo" tabindex="-1" role="dialog" aria-labelledby="productinfo-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="productinfo-label">Sipariş Durumu</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="orderStatusId" value="" />
+                <textarea id="orderStatusDes" class="form-control" @(currentUserType < 4 ? "readonly=\"readonly\"" : "") )></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                @if (currentUserType > 3)
+                {
+                    <button type="button" id="btnSiparisBildir" class="btn btn-success">
+                        <span class="glyphicon glyphicon-bell"></span>&nbsp;Siparişi Tamamla
+                    </button>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+
+    function ShowDes(orderId) {
+
+        ajax({
+            url: "/i/GetOrderDes/" + orderId,
+            method: "GET",
+            async: true,
+            success: function (data) {
+                $("orderStatusinfo").modal("show");
+                $("#orderStatusId").val(orderId);
+                $("orderStatusDes").val(data);
+
+            },
+            error: function (err) {
+                console.log("Hata", err);
+            }
+        })
+    }
+
+    $("#btnSiparisBildir").click(function () {
+
+        ajax({
+            url: "/i/UpdateDes/" + orderId,
+            method: "POST",
+            data: { text: $("#orderStatusDes").val() },
+            async: true,
+            success: function (data) {
+                $("orderStatusinfo").modal("show");
+                $("#orderStatusId").val(orderId);
+                $("orderStatusDes").val(data);
+
+            },
+            success: function(data) {
+                location.reload();
+            },            
+            error: function (err) {
+                console.log("Hata", err);
+            }
+        })
+
+    });
+
+
     function OpenModal(orderId) {
         $("#orderinfo").modal("show");
         $("#orderId").val(orderId);
